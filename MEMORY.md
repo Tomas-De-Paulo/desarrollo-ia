@@ -11,8 +11,9 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - En Resumen, bloque `.objetivo` (campo `#objetivoMinutos`, mensaje `#objetivoMensaje`
   aria-live, estados invitación / aviso ilegibles / cifras + barra progressbar); `app.js`
   usa `CLAVE_OBJETIVO`, `leerSesionesConEstado()`, `pintarObjetivo(sesiones, legible, hoy)`.
-- Sesiones de prueba en Chrome DevTools (6–8 oct, 30 sep, futura 20 oct): si estorran, borrar
-  la clave `diario-estudio-sesiones`.
+- `README.md` creado (español, sin capturas ni licencia) y subido al repo
+  github.com/Tomas-De-Paulo/desarrollo-ia. En el navegador quedan datos de captura
+  (10 sesiones: 19–24 sep + 5–8 oct, objetivo 600): si estorran, borrar las claves.
 
 ## Decisiones (y por qué)
 - Clave nueva `diario-estudio-objetivo` = texto de dígitos ("300"): sesiones intactas, sin
@@ -45,6 +46,5 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - CA-2.9 (aviso de sesiones ilegibles): el test cubre solo el texto; la lógica está
   verificada solo en navegador.
 - Docs desactualizados, a proponer al usuario (NO editar sin permiso): `AGENTS.md` «No hay
-  tests automáticos» (falso: `node --test`, 60 pruebas) y `docs/constitution.md` p. 6
-  «código en inglés» (el código está en español).
-- Por revisar: citas a CA-4.7 (spec 001 solo define CA-4.1-4.6) y fecha antepuesta en `aria-label` de días futuros.
+  tests automáticos» (falso: `node --test`, 60) y `docs/constitution.md` p. 6 «código en
+  inglés» (está en español). Por revisar: citas a CA-4.7 y fecha en `aria-label` de futuro.
