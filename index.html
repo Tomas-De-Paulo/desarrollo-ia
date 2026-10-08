@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diario de Estudio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="contenedor">
+
+    <h1 class="titulo">Diario de Estudio</h1>
+
+    <section class="tarjeta racha">
+      <div class="racha-estadistica">
+        <span class="racha-icono" aria-hidden="true">🔥</span>
+        <div class="racha-contenido">
+          <span class="racha-numero" id="rachaNumero">0</span>
+          <span class="racha-descripcion">días seguidos</span>
+        </div>
+      </div>
+
+      <span class="racha-separador" aria-hidden="true"></span>
+
+      <div class="racha-estadistica">
+        <span class="racha-icono" aria-hidden="true">🏆</span>
+        <div class="racha-contenido">
+          <span class="racha-numero" id="mejorNumero">0</span>
+          <span class="racha-descripcion">mejor racha</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 class="seccion-titulo">Resumen</h2>
+
+      <div class="resumen-fila">
+        <span class="resumen-icono" aria-hidden="true">⏱</span>
+        <div class="resumen-contenido">
+          <span class="resumen-valor" id="minutosSemana">0 min</span>
+          <span class="resumen-descripcion">estudiados esta semana</span>
+        </div>
+      </div>
+
+      <!-- Objetivo semanal: el campo siempre visible; invitación, cifras, barra y aviso
+           los rellena y muestra app.js según el estado (sin objetivo / progreso / aviso). -->
+      <div class="objetivo">
+        <form class="objetivo-formulario" id="formularioObjetivo" novalidate>
+          <label class="campo-label" for="objetivoMinutos">Objetivo de la semana (minutos, se puede cambiar)</label>
+          <div class="objetivo-entrada">
+            <input class="campo campo-objetivo" type="text" id="objetivoMinutos" placeholder="Ej: 300"
+                   inputmode="numeric" autocomplete="off" aria-describedby="objetivoMensaje">
+            <button class="boton boton-objetivo" type="submit">Guardar</button>
+          </div>
+          <!-- Mensaje propio del objetivo (éxito o rechazo): nunca el #mensaje de sesiones -->
+          <p class="mensaje" id="objetivoMensaje" role="status" aria-live="polite"></p>
+        </form>
+
+        <!-- Estado sin objetivo (RF-6): la invitación la escribe app.js -->
+        <p class="objetivo-invitacion" id="objetivoInvitacion" hidden></p>
+
+        <!-- Estado con progreso: cifras + barra; aria-valuenow/aria-valuetext los pinta app.js -->
+        <div class="objetivo-progreso" id="objetivoProgreso" hidden>
+          <p class="objetivo-cifras">
+            <span id="objetivoEstudiado"></span>
+            <span class="objetivo-faltan" id="objetivoFaltan"></span>
+          </p>
+          <div class="objetivo-barra" id="objetivoBarra" role="progressbar"
+               aria-label="Progreso del objetivo semanal"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="objetivo-relleno" id="objetivoRelleno"></div>
+          </div>
+        </div>
+
+        <!-- Aviso de sesiones ilegibles con objetivo válido (CA-2.9) -->
+        <p class="objetivo-aviso" id="objetivoAviso" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="resumen-fila">
+        <span class="resumen-icono" aria-hidden="true">📅</span>
+        <div class="resumen-contenido">
+          <span class="resumen-valor" id="diasMes">0 días</span>
+          <span class="resumen-descripcion">estudiados este mes</span>
+        </div>
+      </div>
+    </section>
+
+    <form class="tarjeta formulario" id="formulario" novalidate>
+      <h2 class="seccion-titulo">Nueva sesión</h2>
+
+      <label class="campo-label" for="tema">Tema</label>
+      <input class="campo" type="text" id="tema" placeholder="Ej: JavaScript básico" autocomplete="off">
+
+      <div class="formulario-fila">
+        <div>
+          <label class="campo-label" for="fecha">Fecha</label>
+          <input class="campo" type="date" id="fecha">
+        </div>
+
+        <div>
+          <label class="campo-label" for="minutos">Minutos</label>
+          <input class="campo" type="number" id="minutos" min="1" step="1" placeholder="Ej: 45" inputmode="numeric">
+        </div>
+      </div>
+
+      <p class="mensaje" id="mensaje" aria-live="polite"></p>
+
+      <button class="boton" type="submit">Guardar sesión</button>
+    </form>
+
+    <section class="tarjeta">
+      <h2 class="seccion-titulo">Sesiones</h2>
+      <ul class="lista" id="lista"></ul>
+    </section>
+
+    <section class="tarjeta mapa" id="mapa-calor" aria-labelledby="titulo-mapa">
+      <h2 class="seccion-titulo" id="titulo-mapa">Mapa de calor de las últimas 12 semanas</h2>
+      <p class="mapa-subtitulo">Un cuadro por día: a más minutos, más intenso el color.</p>
+
+      <!-- Aviso de almacenamiento ilegible: vacío mientras los datos se lean bien -->
+      <div class="mapa-aviso" id="mapa-aviso-lectura" role="alert" aria-live="assertive"></div>
+
+      <p class="mapa-sin-datos" id="mapa-sin-datos" hidden></p>
+
+      <!-- Rotulación de días, etiquetas de mes y rejilla: los rellena app.js -->
+      <div class="mapa-cuerpo" id="mapa-cuerpo" hidden>
+        <div class="mapa-etiquetas" id="mapa-etiquetas-mes" aria-hidden="true"></div>
+        <div class="mapa-columnas">
+          <div class="mapa-rotulacion" id="mapa-rotulacion-dias" aria-hidden="true"></div>
+          <div class="mapa-rejilla" id="mapa-rejilla" role="grid"
+               aria-label="Minutos estudiados cada día durante las últimas 12 semanas"></div>
+        </div>
+      </div>
+
+      <div class="mapa-info" id="mapa-info" hidden>
+        <p class="mapa-cifra" id="mapa-cifra-agregada" aria-live="polite"></p>
+        <div class="mapa-leyenda" id="mapa-leyenda" role="group"
+             aria-label="Leyenda de la escala de minutos por día"></div>
+      </div>
+
+      <!-- Mensaje de detalle (ratón, dedo o teclado): vacío mientras no haya celda activa -->
+      <div class="mapa-detalle" id="mapa-detalle" role="status" aria-live="polite"></div>
+    </section>
+
+  </main>
+
+  <script src="heatmap.js"></script>
+  <script src="objetivo.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,658 @@
+:root {
+  --fondo: #eef1f6;
+  --tarjeta: #ffffff;
+  --texto: #1c1e21;
+  --texto-suave: #6b7280;
+  --borde: #e3e6ea;
+  --fila-borde: #dde2ea;
+  --primario: #4f46e5;
+  --primario-oscuro: #4338ca;
+  --racha: linear-gradient(135deg, #c2410c, #dc2626);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Sin esto, el display flex/row de las clases del mapa taparía el atributo hidden */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+
+.contenedor {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.titulo {
+  margin: 4px 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.seccion-titulo {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--texto);
+}
+
+.racha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 20px;
+  background: var(--racha);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(220, 38, 38, 0.3);
+}
+
+.racha-estadistica {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.racha-icono {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.racha-contenido {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.racha-separador {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.racha-numero {
+  font-size: 2.9rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.racha-descripcion {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.resumen-fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* La fila del mes ya no sigue directamente a la de la semana: entre ellas está el
+   bloque del objetivo, así que también se separa cuando la precede ese bloque. */
+.resumen-fila + .resumen-fila,
+.objetivo + .resumen-fila {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+.resumen-icono {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.resumen-contenido {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resumen-valor {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--primario);
+  overflow-wrap: break-word;
+}
+
+.resumen-descripcion {
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+/* --- Objetivo semanal (bloque dentro del Resumen, sin tarjeta propia) --- */
+.objetivo {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+.objetivo-formulario {
+  margin: 0;
+}
+
+/* Campo y botón comparten fila: el campo crece y el botón mantiene su ancho */
+.objetivo-entrada {
+  display: flex;
+  gap: 10px;
+}
+
+.objetivo-entrada .campo {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+/* Selector con más peso que `.boton` (que fija width:100% y padding) para que el
+   botón mantenga su ancho junto al campo en la fila */
+.objetivo-entrada .boton-objetivo {
+  width: auto;
+  flex: none;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.objetivo-invitacion {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.objetivo-progreso {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+/* Cifras siempre escritas (nunca solo color): "1 h 30 min de 5 h" + lo que falta */
+.objetivo-cifras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: 0;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.objetivo-cifras > span:first-child {
+  font-weight: 700;
+}
+
+.objetivo-faltan {
+  color: var(--texto-suave);
+}
+
+/* Raíl con el color del borde y relleno con el primario; el ancho lo pinta app.js */
+.objetivo-barra {
+  height: 10px;
+  background: var(--borde);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.objetivo-relleno {
+  height: 100%;
+  width: 0;
+  background: var(--primario);
+  border-radius: 999px;
+}
+
+/* Mismo estilo que el aviso del mapa; solo se muestra cuando tiene texto */
+.objetivo-aviso {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.campo-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.campo {
+  width: 100%;
+  height: 48px;
+  margin-bottom: 16px;
+  padding: 0 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--texto);
+  background: #fbfbfd;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+
+.formulario-fila .campo {
+  margin-bottom: 0;
+}
+
+.campo:focus {
+  outline: none;
+  border-color: var(--primario);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
+}
+
+.mensaje {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+}
+
+.mensaje.error {
+  color: #b91c1c;
+}
+
+.mensaje.exito {
+  color: #047857;
+}
+
+.boton {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--primario);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.boton:hover {
+  background: var(--primario-oscuro);
+}
+
+.boton:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.55);
+  outline-offset: 2px;
+}
+
+.lista {
+  list-style: none;
+  margin: 0 -20px;
+  padding: 0;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "fecha minutos"
+    "tema minutos";
+  column-gap: 14px;
+  row-gap: 2px;
+  align-items: center;
+  padding: 13px 20px;
+  border-top: 1px solid var(--fila-borde);
+}
+
+.item:first-child {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.item-fecha {
+  grid-area: fecha;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.item-tema {
+  grid-area: tema;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.item-minutos {
+  grid-area: minutos;
+  align-self: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.vacio {
+  padding: 8px 20px;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+/* --- Mapa de calor --- */
+/* Medidas de la rejilla como variables para que la rotulación, las etiquetas de mes
+   y las celdas compartan exactamente el mismo tamaño de fila y de columna. */
+.mapa {
+  --celda-tam: 30px;
+  --hueco: 4px;
+  --rotulacion-alto: 14px;
+  --etiqueta-fuente: 11px;
+  --columna-hueco: 8px;
+}
+
+.mapa-subtitulo {
+  margin: -8px 0 14px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+/* Aviso y detalle solo ocupan sitio cuando tienen texto (estado vacío = altura 0) */
+.mapa-aviso:empty,
+.mapa-detalle:empty {
+  padding: 0;
+  margin: 0;
+}
+
+.mapa-aviso:not(:empty) {
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+}
+
+.mapa-sin-datos {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.mapa-cuerpo {
+  display: flex;
+  gap: var(--columna-hueco);
+  /* Si la rejilla no cabe, el scroll es interno de la sección, nunca de la página */
+  overflow-x: auto;
+}
+
+.mapa-etiquetas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hueco);
+  flex: none;
+  /* Compensa la altura de la rotulación para alinear cada etiqueta con su fila */
+  margin-top: calc(var(--rotulacion-alto) + var(--hueco));
+}
+
+.mapa-etiqueta {
+  height: var(--celda-tam);
+  display: flex;
+  align-items: center;
+  font-size: var(--etiqueta-fuente);
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.mapa-columnas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hueco);
+  flex: none;
+}
+
+.mapa-rotulacion {
+  display: flex;
+  gap: var(--hueco);
+  height: var(--rotulacion-alto);
+}
+
+.mapa-rotulacion span {
+  width: var(--celda-tam);
+  text-align: center;
+  font-size: var(--etiqueta-fuente);
+  line-height: var(--rotulacion-alto);
+  color: var(--texto-suave);
+}
+
+.mapa-rejilla {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hueco);
+}
+
+.mapa-fila {
+  display: flex;
+  gap: var(--hueco);
+}
+
+.mapa-celda {
+  width: var(--celda-tam);
+  height: var(--celda-tam);
+  border-radius: 5px;
+  background: var(--nivel-0, #e9ecf4);
+  user-select: none;
+}
+
+.mapa-celda:focus {
+  outline: 2px solid var(--primario-oscuro);
+  outline-offset: 2px;
+  z-index: 1;
+  position: relative;
+}
+
+/* Escala: los cuatro niveles superiores se distinguen entre sí y del blanco de la
+   tarjeta (contraste >= 3:1); el 0 es el "sin color" y el futuro lleva borde discontinuo. */
+.nivel-0 { background: #e9ecf4; }
+.nivel-1 { background: #818cf8; }
+.nivel-2 { background: #4f46e5; }
+.nivel-3 { background: #3730a3; }
+.nivel-4 { background: #1e1b4b; }
+
+.mapa-celda.no-disponible {
+  background: transparent;
+  border: 1px dashed #6b7280;
+}
+
+.mapa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.mapa-cifra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.mapa-cifra-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primario);
+}
+
+.mapa-cifra-etiqueta {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.mapa-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+.mapa-leyenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.mapa-muestra {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.mapa-detalle:not(:empty) {
+  margin-top: 12px;
+  padding: 9px 13px;
+  font-size: 0.85rem;
+  background: #f6f7fb;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .boton,
+  .campo {
+    transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .mapa-celda {
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .objetivo-relleno {
+    transition: width 260ms ease;
+  }
+}
+
+/* Por debajo de 420px el input de fecha (mínimo ~167px) ya no cabe en dos
+   columnas, así que ahí se apilan y se reducen los tamaños. */
+@media (max-width: 419px) {
+  body {
+    padding: 18px 14px 40px;
+  }
+
+  .tarjeta {
+    padding: 18px;
+  }
+
+  .lista {
+    margin: 0 -18px;
+  }
+
+  .item {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .vacio {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .formulario-fila {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Campo del objetivo y botón apilados: cada uno cómodo con el dedo a 320/375 px.
+     `flex: none` recupera la altura de 48 px del campo: en columna, `flex: 1`
+     (base 0%) se aplicaría al alto y lo colapsaría. */
+  .objetivo-entrada {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .objetivo-entrada .campo {
+    flex: none;
+  }
+
+  .objetivo-entrada .boton-objetivo {
+    width: 100%;
+  }
+
+  .racha {
+    gap: 10px;
+  }
+
+  .racha-estadistica {
+    gap: 8px;
+  }
+
+  .racha-numero {
+    font-size: 2.3rem;
+  }
+
+  .racha-icono {
+    font-size: 1.8rem;
+  }
+
+  .racha-descripcion {
+    font-size: 0.8rem;
+  }
+
+  .resumen-valor {
+    font-size: 1.6rem;
+  }
+
+  /* Mapa: celdas y textos más pequeños para que las 7 columnas más la columna de
+     etiquetas de mes quepan sin desbordar a 320 px. */
+  .mapa {
+    --celda-tam: 20px;
+    --hueco: 3px;
+    --rotulacion-alto: 12px;
+    --etiqueta-fuente: 10px;
+    --columna-hueco: 6px;
+  }
+
+  .mapa-subtitulo {
+    margin-top: -6px;
+  }
+}
